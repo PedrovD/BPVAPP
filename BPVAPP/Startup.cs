@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BPVAPP.Data;
 using BPVAPP.Models;
 using BPVAPP.Services;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace BPVAPP
 {
@@ -26,8 +27,16 @@ namespace BPVAPP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+           
+            services.AddDbContextPool<ApplicationDbContext>(
+         options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+         mysqlOptions =>
+         {
+             mysqlOptions.ServerVersion(new Version(10, 1, 31), ServerType.MySql); // replace with your Server Version and Type
+             mysqlOptions.DisableBackslashEscaping();
+         }
+        ));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
