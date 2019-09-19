@@ -19,5 +19,10 @@ namespace BPVAPP.Models
         public virtual string ContactPersoon_2 { get; set; }
         public virtual string ContactPersoonEmail_2 { get; set; }
         public virtual string Opmerking { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Bedrijfsnaam}/{Adres}/{Website}";
+        }
     }
 }
